@@ -14,19 +14,11 @@ import android.webkit.WebViewClient;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-/**
- * এই অ্যাপটা মূলত আপনার সীরাত কুইজ পোর্টাল ওয়েবসাইটটাকেই একটা নেটিভ Android
- * অ্যাপের "খোলস" (shell)-এর ভেতরে দেখায় — ঠিক যেভাবে আগের LifeManager অ্যাপেও
- * করা হয়েছিল। ওয়েবসাইটে যা পরিবর্তন করবেন, অ্যাপেও সাথে সাথে তা দেখা যাবে —
- * আলাদাভাবে অ্যাপ আপডেট করার প্রয়োজন নেই।
- */
 public class MainActivity extends AppCompatActivity {
 
-    // আপনার কুইজ পোর্টালের ডিপ্লয়-করা লিংক। ভবিষ্যতে Apps Script-এ নতুন করে
-    // "New deployment" করলে লিংক বদলে যেতে পারে — তখন শুধু এই একটা লাইন বদলে
-    // আবার অ্যাপ বিল্ড করলেই অ্যাপ নতুন লিংকে চলবে।
-    private static final String SITE_URL =
-            "https://script.google.com/macros/s/AKfycbxvaZzSRaXIkXdRK3bWPGemcIp20ZUzN2_IWzCUvbF4CGdbWXhkC0vUvJH5Y0ZL8fMB/exec";
+    // অ্যাপ খুললে এই লিংকটা প্রথমে লোড হবে। ভবিষ্যতে লিংক বদলাতে চাইলে শুধু এই
+    // একটা লাইন বদলে আবার অ্যাপ বিল্ড করলেই অ্যাপ নতুন লিংকে চলবে।
+    private static final String SITE_URL = "https://seerahquizbd.blogspot.com/";
 
     private WebView webView;
     private View errorView;
@@ -61,8 +53,12 @@ public class MainActivity extends AppCompatActivity {
                 Uri uri = request.getUrl();
                 String host = uri.getHost() == null ? "" : uri.getHost();
 
-                // নিজের সাইটের লিংক (ও Google-এর রিডাইরেক্ট ডোমেইন) ওয়েবভিউর ভেতরেই থাকবে
-                if (host.contains("script.google.com") || host.contains("googleusercontent.com")) {
+                // নিজের সাইটের লিংক (Blogspot পেজ, আর তার ভেতর থেকে যদি কুইজ অংশের
+                // জন্য script.google.com-এ যাওয়া হয়, সেটাও) ওয়েবভিউর ভেতরেই থাকবে
+                if (host.contains("blogspot.com")
+                        || host.contains("blogger.com")
+                        || host.contains("script.google.com")
+                        || host.contains("googleusercontent.com")) {
                     return false;
                 }
 
@@ -86,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                // মূল পেজ লোড করতেই সমস্যা হলে এরর স্ক্রিন দেখানো হবে (ভেতরের কোনো ছোট রিসোর্স
-                // ফেইল করলে পুরো স্ক্রিন এরর দেখানো হবে না)
                 if (request.isForMainFrame() && !pageLoadedOnce) {
                     showErrorView();
                 }
