@@ -1,0 +1,31 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: কোড checkout করা
+        uses: actions/checkout@v4
+
+      - name: Java 17 সেটআপ করা
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: gradlew-কে এক্সিকিউটেবল করা
+        run: chmod +x ./gradlew
+
+      - name: Debug APK বিল্ড করা
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: APK আপলোড করা (Artifacts)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SeerahQuiz-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
