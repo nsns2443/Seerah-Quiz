@@ -1,0 +1,4 @@
+// প্রজেক্টের সবচেয়ে উপরের build.gradle — এখানে শুধু AGP (Android Gradle Plugin) ভার্সন বলা আছে।
+plugins {
+    id 'com.android.application' version '8.5.2' apply false
+}
